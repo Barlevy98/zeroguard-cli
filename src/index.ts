@@ -3,6 +3,7 @@
 import { Command } from 'commander';
 import { initCommand } from './commands/init.js';
 import { scanCommand } from './commands/scan.js';
+import { ciCommand } from './commands/ci.js';
 
 const program = new Command();
 
@@ -13,7 +14,7 @@ program
 
 program
   .command('init')
-  .description('Initialize ZeroGuard in your current project')
+  .description('Initialize ZeroGuard in your current project (Pre-commit hook)')
   .action(() => {
     initCommand();
   });
@@ -23,6 +24,13 @@ program
   .description('Scan project for security vulnerabilities and hardcoded secrets')
   .action(() => {
     scanCommand();
+  });
+
+program
+  .command('ci')
+  .description('Generate a free GitHub Actions CI/CD pipeline')
+  .action(() => {
+    ciCommand();
   });
 
 program.parse(process.argv);
