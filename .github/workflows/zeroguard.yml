@@ -18,5 +18,8 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Run ZeroGuard Scan
-        run: npx zeroguard-cli scan
+      - name: Build and Scan
+        run: |
+          npm install
+          npm run build
+          node dist/index.js scan
