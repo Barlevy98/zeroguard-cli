@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "zeroguard": "./dist/index.js"
-  },
+  "zeroguard": "dist/index.js"
+},
   "type": "module",
   "scripts": {
     "build": "tsup src/index.ts --format esm --minify",
