@@ -3,10 +3,10 @@
 [![npm version](https://img.shields.io/npm/v/zeroguard-cli.svg)](https://www.npmjs.com/package/zeroguard-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Zero-config DevSecOps & QA CLI for indie hackers and solo devs.**
+**Zero-config DevSecOps & QA CLI for indie and solo devs.**
 
 ## 🚨 The Problem
-As a solo developer or indie hacker, setting up CI/CD pipelines, pre-commit hooks, and security scanners is a tedious distraction. You just want to ship your product, but one accidental `git push` with an AWS key or an unignored `.env` file can cost you thousands of dollars.
+As a indie or solo developer, setting up CI/CD pipelines, pre-commit hooks, and security scanners is a tedious distraction. You just want to ship your product, but one accidental `git push` with an AWS key or an unignored `.env` file can cost you thousands of dollars.
 
 ## 💡 The Solution
 ZeroGuard prevents you from accidentally leaking API keys and deploying vulnerable Docker images. It injects a pre-commit hook that automatically scans your code before every commit, securing your project locally and in the cloud with literally zero configuration.
