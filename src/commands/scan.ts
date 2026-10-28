@@ -3,6 +3,7 @@ import path from 'path';
 import { logger } from '../utils/logger.js';
 import { scanFileForSecrets } from '../scanners/secrets.js';
 import { scanDockerfile } from '../scanners/docker.js';
+import { scanGitignore } from '../scanners/gitignore.js';
 
 function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
   const files = fs.readdirSync(dirPath);
@@ -28,16 +29,18 @@ export function scanCommand() {
   const allFiles = getAllFiles(process.cwd());
   let hasErrors = false;
 
+  if (scanGitignore()) {
+    hasErrors = true;
+  }
+
   allFiles.forEach(file => {
      const ext = path.extname(file);
      const basename = path.basename(file);
 
-     // סריקת סודות רגילה
      if (['.js', '.ts', '.json', '.env', '.txt'].includes(ext) || basename.includes('.env')) {
        if (scanFileForSecrets(file)) hasErrors = true;
      }
 
-     // סריקת Dockerfile
      if (basename === 'Dockerfile' || basename.includes('Dockerfile.')) {
        if (scanDockerfile(file)) hasErrors = true;
      }

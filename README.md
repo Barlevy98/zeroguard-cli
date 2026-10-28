@@ -5,7 +5,11 @@
 
 **Zero-config DevSecOps & QA CLI for indie hackers and solo devs.**
 
-ZeroGuard prevents you from accidentally leaking AWS keys, Stripe secrets, and deploying vulnerable Docker images. It injects a pre-commit hook that automatically scans your code before every commit, securing your project locally and in the cloud with zero configuration.
+## 🚨 The Problem
+As a solo developer or indie hacker, setting up CI/CD pipelines, pre-commit hooks, and security scanners is a tedious distraction. You just want to ship your product, but one accidental `git push` with an AWS key or an unignored `.env` file can cost you thousands of dollars.
+
+## 💡 The Solution
+ZeroGuard prevents you from accidentally leaking API keys and deploying vulnerable Docker images. It injects a pre-commit hook that automatically scans your code before every commit, securing your project locally and in the cloud with literally zero configuration.
 
 ## 📦 Installation
 
@@ -23,28 +27,40 @@ npm install -g zeroguard-cli
 ## 🚀 Usage & Commands
 
 ### 1. Initialize Security Hooks (`init`)
-Sets up a Git pre-commit hook in your repository. Once installed, ZeroGuard will automatically scan your files every time you run `git commit`. If a secret or vulnerability is found, the commit is aborted.
+Sets up a Git pre-commit hook in your repository. Once installed, ZeroGuard will automatically scan your files every time you run `git commit`. If a secret is found, the commit is aborted.
 ```bash
 npx zeroguard-cli init
 ```
 
-### 2. Manual Security Scan (`scan`)
-Scans your entire project directory for hardcoded secrets, API keys, and Dockerfile vulnerabilities.
-```bash
-npx zeroguard-cli scan
-```
-
-### 3. Generate CI/CD Pipeline (`ci`)
-Instantly generates a free, fully configured GitHub Actions workflow (`.github/workflows/zeroguard.yml`).
+### 2. Generate CI/CD Pipeline (`ci`)
+Instantly generates a free, fully configured GitHub Actions workflow (`.github/workflows/zeroguard.yml`) that acts as a cloud safety net on every push and pull request.
 ```bash
 npx zeroguard-cli ci
 ```
 
+### 3. Manual Security Scan (`scan`)
+Manually scans your entire project directory for vulnerabilities.
+```bash
+npx zeroguard-cli scan
+```
+
 ## ✨ Features
 - 🔑 **Secrets Scanner:** Detects AWS Access Keys, Stripe Secrets, and generic API keys.
+- 🛡️ **Gitignore Validator:** Prevents you from committing `.env` files if they are not listed in `.gitignore`.
 - 🐳 **Docker Auditor:** Blocks `latest` image tags and enforces non-root container users.
-- ⚡ **Zero Config:** No complex `.yml` or `.json` setup required. Run one command and you are secure.
-- 🤖 **Automated CI/CD:** Generates GitHub Actions pipelines instantly.
+- ⚡ **Zero Config:** No complex `.yml` or `.json` setup required. 
+
+## 🏗️ Project Architecture
+```text
+zeroguard-cli/
+├── src/
+│   ├── commands/      # CLI terminal commands (init, scan, ci)
+│   ├── scanners/      # Security logic (secrets, docker, gitignore)
+│   ├── utils/         # Helpers (logger, terminal styling)
+│   └── index.ts       # CLI entry point
+├── dist/              # Compiled executable files
+└── package.json
+```
 
 ## 🤝 Contributing
 Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
