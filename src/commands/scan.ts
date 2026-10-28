@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { logger } from '../utils/logger.js';
 import { scanFileForSecrets } from '../scanners/secrets.js';
+import { scanDockerfile } from '../scanners/docker.js';
 
-// פונקציית עזר למציאת כל הקבצים בתיקייה (למעט תיקיות כבדות/מערכת)
 function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
   const files = fs.readdirSync(dirPath);
 
@@ -23,24 +23,30 @@ function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
 
 export function scanCommand() {
   logger.title('ZeroGuard - Security Scan');
-  logger.info('Scanning project files for secrets...');
+  logger.info('Scanning project files for vulnerabilities...');
 
   const allFiles = getAllFiles(process.cwd());
-  const targetExtensions = ['.js', '.ts', '.json', '.env', '.txt'];
-  const filesToScan = allFiles.filter(f => targetExtensions.includes(path.extname(f)) || path.basename(f).includes('.env'));
-
   let hasErrors = false;
 
-  filesToScan.forEach(file => {
-     const found = scanFileForSecrets(file);
-     if (found) hasErrors = true;
+  allFiles.forEach(file => {
+     const ext = path.extname(file);
+     const basename = path.basename(file);
+
+     // סריקת סודות רגילה
+     if (['.js', '.ts', '.json', '.env', '.txt'].includes(ext) || basename.includes('.env')) {
+       if (scanFileForSecrets(file)) hasErrors = true;
+     }
+
+     // סריקת Dockerfile
+     if (basename === 'Dockerfile' || basename.includes('Dockerfile.')) {
+       if (scanDockerfile(file)) hasErrors = true;
+     }
   });
 
   if (hasErrors) {
-     logger.error('\nScan failed: Secrets detected in code!');
-     // השורה הזו היא הקסם - היא זו שמכשילה בפועל פעולות כמו Git Commit או CI/CD 
-     process.exit(1); 
+     logger.error('\nScan failed: Vulnerabilities detected!');
+     process.exit(1);
   } else {
-     logger.success('Scan passed: No secrets found. Code is clean.');
+     logger.success('Scan passed: Code is secure and ready.');
   }
 }
